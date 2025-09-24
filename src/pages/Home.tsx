@@ -59,7 +59,7 @@ export default function Home() {
                 title={category.title}
                 subtitle={category.subtitle}
                 icon={category.icon}
-                techniqueCount={category.techniques.length}
+                techniqueCount={category.techniques?.length || category.subcategories?.reduce((total, sub) => total + sub.techniques.length, 0) || 0}
                 onClick={() => handleCategoryClick(category.id)}
                 className="group h-full"
               />
