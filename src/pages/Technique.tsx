@@ -6,11 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { getCategoryById, getTechniqueById } from "@/data/karateData";
 
 export default function Technique() {
-  const { categoryId, techniqueId } = useParams();
+  const { categoryId, techniqueId, subcategoryId } = useParams();
   const navigate = useNavigate();
   
   const category = categoryId ? getCategoryById(categoryId) : null;
-  const technique = categoryId && techniqueId ? getTechniqueById(categoryId, techniqueId) : null;
+  const technique = categoryId && techniqueId ? getTechniqueById(categoryId, techniqueId, subcategoryId) : null;
 
   if (!category || !technique) {
     return (
@@ -34,11 +34,11 @@ export default function Technique() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate(`/category/${categoryId}`)}
+              onClick={() => navigate(subcategoryId ? `/category/${categoryId}/subcategory/${subcategoryId}` : `/category/${categoryId}`)}
               className="flex items-center space-x-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to {category.title}</span>
+              <span>Back to {subcategoryId ? 'Subcategory' : category.title}</span>
             </Button>
             
             <Badge variant="outline" className="hidden sm:flex">

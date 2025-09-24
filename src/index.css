@@ -143,6 +143,10 @@
     @apply opacity-100;
   }
 
+  .subcategory-card {
+    @apply bg-card border border-border rounded-lg p-5 hover:shadow-md hover:border-primary/20 transition-all duration-300;
+  }
+
   /* Category cards with Japanese aesthetic */
   .category-card {
     @apply relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-accent/20

@@ -23,12 +23,20 @@ export interface Technique {
   image?: string;
 }
 
+export interface Subcategory {
+  id: string;
+  title: string;
+  subtitle: string;
+  techniques: Technique[];
+}
+
 export interface Category {
   id: string;
   title: string;
   subtitle: string;
   icon: any;
-  techniques: Technique[];
+  techniques?: Technique[];
+  subcategories?: Subcategory[];
 }
 
 export const karateCategories: Category[] = [
@@ -82,42 +90,87 @@ export const karateCategories: Category[] = [
     title: "Hand Strikes",
     subtitle: "突き (Tsuki) - Powerful linear attacks using fists",
     icon: Hand,
-    techniques: [
+    subcategories: [
       {
-        id: "oi-zuki",
-        japanese: "追い突き (Oi-zuki)",
-        english: "Lunge Punch",
-        description: "A stepping punch where the same side hand and foot move forward",
-        steps: [
-          "Start in front stance with opposite hand extended",
-          "Step forward with rear foot while pulling back front hand",
-          "Punch with the hand on same side as stepping foot",
-          "Rotate hips and shoulders for maximum power"
+        id: "zuki",
+        title: "Zuki (Straight Punches)",
+        subtitle: "突き - Linear striking techniques",
+        techniques: [
+          {
+            id: "oi-zuki",
+            japanese: "追い突き (Oi-zuki)",
+            english: "Lunge Punch",
+            description: "A stepping punch where the same side hand and foot move forward",
+            steps: [
+              "Start in front stance with opposite hand extended",
+              "Step forward with rear foot while pulling back front hand",
+              "Punch with the hand on same side as stepping foot",
+              "Rotate hips and shoulders for maximum power"
+            ]
+          },
+          {
+            id: "gyaku-zuki",
+            japanese: "逆突き (Gyaku-zuki)",
+            english: "Reverse Punch",
+            description: "A punch using the opposite hand to the front leg",
+            image: gyakuZukiImage,
+            steps: [
+              "Maintain front stance position",
+              "Pull back punching hand to hip",
+              "Drive punch forward using hip rotation",
+              "Keep shoulders square and balanced"
+            ]
+          },
+          {
+            id: "kizami-zuki",
+            japanese: "刻み突き (Kizami-zuki)",
+            english: "Jab Punch",
+            description: "A quick, straight punch with the lead hand",
+            steps: [
+              "Start in fighting stance",
+              "Extend lead hand straight forward",
+              "Keep rear hand in guard position",
+              "Return quickly to guard after punch"
+            ]
+          }
         ]
       },
       {
-        id: "gyaku-zuki",
-        japanese: "逆突き (Gyaku-zuki)",
-        english: "Reverse Punch",
-        description: "A punch using the opposite hand to the front leg",
-        image: gyakuZukiImage,
-        steps: [
-          "Maintain front stance position",
-          "Pull back punching hand to hip",
-          "Drive punch forward using hip rotation",
-          "Keep shoulders square and balanced"
+        id: "shuto",
+        title: "Shuto (Knife Hand)",
+        subtitle: "手刀 - Striking with the edge of the hand",
+        techniques: [
+          {
+            id: "shuto-uchi",
+            japanese: "手刀打ち (Shuto-uchi)",
+            english: "Knife Hand Strike",
+            description: "A striking technique using the outer edge of the hand",
+            steps: [
+              "Form proper knife hand position",
+              "Keep fingers straight and together",
+              "Strike with outer edge of hand",
+              "Follow through with hip rotation"
+            ]
+          }
         ]
       },
       {
-        id: "kizami-zuki",
-        japanese: "刻み突き (Kizami-zuki)",
-        english: "Jab Punch",
-        description: "A quick, straight punch with the lead hand",
-        steps: [
-          "Start in fighting stance",
-          "Extend lead hand straight forward",
-          "Keep rear hand in guard position",
-          "Return quickly to guard after punch"
+        id: "tettsui",
+        title: "Tettsui (Hammer Fist)",
+        subtitle: "鉄槌 - Striking with the bottom of the fist",
+        techniques: [
+          {
+            id: "tettsui-uchi",
+            japanese: "鉄槌打ち (Tettsui-uchi)",
+            english: "Hammer Fist Strike",
+            description: "A downward strike using the bottom of the fist",
+            steps: [
+              "Form a proper fist",
+              "Raise arm overhead",
+              "Strike downward with bottom of fist",
+              "Use whole body for power"
+            ]
+          }
         ]
       }
     ]
@@ -393,7 +446,18 @@ export function getCategoryById(id: string): Category | undefined {
   return karateCategories.find(category => category.id === id);
 }
 
-export function getTechniqueById(categoryId: string, techniqueId: string): Technique | undefined {
+export function getSubcategoryById(categoryId: string, subcategoryId: string): Subcategory | undefined {
   const category = getCategoryById(categoryId);
-  return category?.techniques.find(technique => technique.id === techniqueId);
+  return category?.subcategories?.find(subcategory => subcategory.id === subcategoryId);
+}
+
+export function getTechniqueById(categoryId: string, techniqueId: string, subcategoryId?: string): Technique | undefined {
+  const category = getCategoryById(categoryId);
+  
+  if (subcategoryId) {
+    const subcategory = getSubcategoryById(categoryId, subcategoryId);
+    return subcategory?.techniques.find(technique => technique.id === techniqueId);
+  }
+  
+  return category?.techniques?.find(technique => technique.id === techniqueId);
 }

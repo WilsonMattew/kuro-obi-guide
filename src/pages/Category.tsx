@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TechniqueCard } from "@/components/TechniqueCard";
+import { SubcategoryCard } from "@/components/SubcategoryCard";
 import { getCategoryById } from "@/data/karateData";
 
 export default function Category() {
@@ -27,6 +28,10 @@ export default function Category() {
     navigate(`/category/${categoryId}/technique/${techniqueId}`);
   };
 
+  const handleSubcategoryClick = (subcategoryId: string) => {
+    navigate(`/category/${categoryId}/subcategory/${subcategoryId}`);
+  };
+
   const IconComponent = category.icon;
 
   return (
@@ -47,7 +52,9 @@ export default function Category() {
             
             <div className="text-right">
               <div className="text-sm text-muted-foreground">
-                {category.techniques.length} techniques
+                {category.subcategories 
+                  ? `${category.subcategories.length} subcategories` 
+                  : `${category.techniques?.length || 0} techniques`}
               </div>
             </div>
           </div>
@@ -80,30 +87,51 @@ export default function Category() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-foreground mb-2">
-            Available Techniques
+            {category.subcategories ? 'Available Subcategories' : 'Available Techniques'}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Select a technique to view detailed instructions and practice steps
+            {category.subcategories 
+              ? 'Select a subcategory to explore specific techniques' 
+              : 'Select a technique to view detailed instructions and practice steps'}
           </p>
         </div>
 
-        <div className="space-y-4">
-          {category.techniques.map((technique, index) => (
-            <div
-              key={technique.id}
-              className="animate-slide-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <TechniqueCard
-                japanese={technique.japanese}
-                english={technique.english}
-                description={technique.description}
-                image={technique.image}
-                onClick={() => handleTechniqueClick(technique.id)}
-              />
-            </div>
-          ))}
-        </div>
+        {category.subcategories ? (
+          <div className="grid gap-4 md:grid-cols-2">
+            {category.subcategories.map((subcategory, index) => (
+              <div
+                key={subcategory.id}
+                className="animate-slide-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <SubcategoryCard
+                  title={subcategory.title}
+                  subtitle={subcategory.subtitle}
+                  techniqueCount={subcategory.techniques.length}
+                  onClick={() => handleSubcategoryClick(subcategory.id)}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {category.techniques?.map((technique, index) => (
+              <div
+                key={technique.id}
+                className="animate-slide-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <TechniqueCard
+                  japanese={technique.japanese}
+                  english={technique.english}
+                  description={technique.description}
+                  image={technique.image}
+                  onClick={() => handleTechniqueClick(technique.id)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
